@@ -1,0 +1,58 @@
+\documentclass{uomposter}
+
+\title{Posters with the (unofficial) University~of~Manchester style}
+\author{Joe Bloggs}
+\authoremail{joe.bloggs@example.com}
+\supervisor{Jane Doe}{jane.doe@example.com}
+\cosupervisor{H. Leslie Simmons}{h.l.simmons@example.org}
+\institute{School of Poster Examples}
+
+\usepackage[english]{babel}
+\usepackage{blindtext}
+
+\begin{document}
+	\maketitle
+
+  %% Initial row of columns
+  \begin{column}{.3\textwidth}
+    \section{Installation}
+    
+    Installing the (unofficial) University~of~Manchester poster class is
+    relatively simple.
+    
+    First make sure you have the following packages
+    installed:
+    \foreach \p in {geometry, graphicx, pgf/tikz, sourcesanspro, titlesec, xcolor}{%
+      \texttt{\p},
+    }
+
+    Then copy the files from the release into a suitable location.
+
+    \blindenumerate[5]
+  \end{column}\hfill%
+  \begin{column}{.3\textwidth}
+    \section{Getting started}
+    \blindtext
+  \end{column}\hfill%
+  \begin{column}{.3\textwidth}
+    \section{Hints and tips}
+    \blindenumerate[10]
+  \end{column}
+
+  %% Next row of content
+  \vspace{2\baselineskip}
+
+  \begin{column}{.3\textwidth}
+    \section{Lorem ipsom}
+    \blindtext
+  \end{column}\hfill%
+  \begin{column}{.65\textwidth}
+    \section{Etc.}
+    \blindmathtrue
+    \blindtext[2]
+  \end{column}
+
+  %% Final row of content
+  \section{Final thoughts}
+  \blindtext
+\end{document}

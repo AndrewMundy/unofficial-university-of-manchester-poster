@@ -7,14 +7,33 @@
 \ProvidesClass{uomposter}%
 [2013/10/16 Unofficial poster class for the University of Manchester]
 
-%% Load the `article` class
-\LoadClass{article}
-
-%% Set up the geometry, this will eventually be parameterized
+%% Options
+\newcommand{\@papersize}{a1paper}
 \newlength{\@pad}
-\setlength{\@pad}{10mm}
+\setlength{\@pad}{20mm}
+
+\newlength{\logo@width}
+\setlength{\logo@width}{80mm}
+
+\DeclareOption{a2paper}{%
+  \renewcommand{\@papersize}{a2paper}
+  \setlength{\@pad}{10mm}
+  \setlength{\logo@width}{60mm}
+}
+\DeclareOption{a3paper}{%
+  \renewcommand{\@papersize}{a3paper}
+  \setlength{\@pad}{10mm}
+  \setlength{\logo@width}{40mm}
+}
+
+\ProcessOptions
+
+%% Load the `article` class
+\LoadClass[20pt]{extarticle}
+
+%% Set up the geometr
 \RequirePackage[%
-	a2paper, top=\@pad, bottom=\@pad, right=\@pad, left=\@pad]%
+	\@papersize, top=\@pad, bottom=\@pad, right=\@pad, left=\@pad]%
 	{geometry}
 \pagestyle{empty}
 
@@ -45,7 +64,7 @@
 \colorlet{uomgrey10}{uomgrey!10!white}
 \colorlet{uomgrey5}{uomgrey!5!white}
 
-\colorlet{contentgray}{black!75!white}
+\colorlet{contentgray}{black!85!white}
 \color{contentgray}
 
 %% Require TikZ
@@ -53,15 +72,15 @@
 
 %% Fonts
 \RequirePackage[default,type1]{sourcesanspro}
+\RequirePackage{ragged2e}
+\RaggedRight
 
 %% Logo configuration
-\newlength{\logo@width}
 \newlength{\logo@height}
 \newlength{\logo@pad}
 
-\setlength{\logo@width}{40mm}
 \setlength{\logo@height}{0.4347\logo@width}
-\setlength{\logo@pad}{0.3213\logo@height}
+\setlength{\logo@pad}{0.7391\logo@height}
 \addtolength{\logo@pad}{-\@pad}
 
 \RequirePackage{graphicx}
@@ -73,11 +92,25 @@
 \newlength{\title@width}
 \setlength{\title@width}{\textwidth}
 \addtolength{\title@width}{-\logo@pagewidth}
-\addtolength{\title@width}{-\@pad}
-\addtolength{\title@width}{-1em}
+\addtolength{\title@width}{-2\@pad}
 
 \newlength{\title@preskip}
 \setlength{\title@preskip}{0.3213\logo@height}
+
+%% Purple dots
+\newcommand{\uomdots}{%
+	\begin{pgfpicture}
+		\color{uompurple}
+    \pgfsetlinewidth{8pt}
+    \pgfsetroundcap
+    \pgfsetdash{{0pt}{32pt}}{0cm}
+
+    \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+    \pgfpathlineto{\pgfpoint{\textwidth}{0mm}}
+
+    \pgfusepath{stroke}
+	\end{pgfpicture}%
+}
 
 %% Override Maketitle
 \newcommand{\@authoremail}{}
@@ -92,53 +125,44 @@
 \newcommand{\institute}[1]{\renewcommand{\@institute}{#1}}
 
 \renewcommand{\maketitle}{%
-	\noindent%
-	\vspace*{\logo@pad}
-	\vskip0cm
-	\hspace*{\logo@pad}
+  \hspace*{\logo@pad}%
 	%% Position the logo on the background
 	\begin{minipage}{\logo@width}
+    \vspace*{\logo@pad}%
 		\includegraphics[width=\logo@width]{TAB_col_white_background}%
 	\end{minipage}
 	\hspace*{\logo@pad}%
 	\hspace*{\@pad}%
-	\begin{minipage}[t]{\title@width}
-		{\Huge\addtolength{\title@preskip}{-42pt}%
-		\vspace*{\title@preskip}}
-		%% Add the title information
-		\raggedright{\Huge\@title}\scriptsize\vskip\baselineskip
-
+  \begin{minipage}[t]{\title@width}
+    \vspace*{.75\logo@pad}
 		%% Add the author / supervisor / co-supervisor information
-		\begin{minipage}[c]{.33\textwidth}\color{uomgrey}
-			\centering\textbf{\@author}\\
+		\begin{minipage}[c]{.50\textwidth}\color{uomgrey}
+			\textbf{\@author}\\
 			\color{uomgrey50}\@authoremail
 		\end{minipage}%
-		\begin{minipage}[c]{.33\textwidth}\color{uomgrey}
-			\centering\textit{\color{uomgrey75}Supervisor}\hspace*{1ex}\textbf{\@supervisor}\\
-			\color{uomgrey50}\@supervisoremail
+		\begin{minipage}[c]{.25\textwidth}\color{uomgrey}
+			{\color{uomgrey50}Supervisor}\\
+      \textbf{\color{uomgrey75}\@supervisor}
 		\end{minipage}%
-		\begin{minipage}[c]{.33\textwidth}\color{uomgrey}
-			\centering\textit{\color{uomgrey75}Co-Supervisor}\hspace*{1ex}\textbf{\@cosupervisor}\\
-			\color{uomgrey50}\@cosupervisoremail
+		\begin{minipage}[c]{.25\textwidth}\color{uomgrey}
+			{\color{uomgrey50}Co-Supervisor}\\
+      \textbf{\color{uomgrey75}\@cosupervisor}
 		\end{minipage}
-		\vskip.5\baselineskip
-		\centering{\color{uomgrey50}\@institute}
-		\vspace*{\baselineskip}
+		\vspace*{2\baselineskip}
+
+		%% Add the title information
+		{\Huge\addtolength{\title@preskip}{-42pt}%
+		\vspace*{\title@preskip}}
+    \raggedright{
+      \fontsize{64pt}{72pt}\fontseries{bx}\selectfont%
+      \color{uompurple}%
+      \@title%
+    }
+		\vspace*{\title@preskip}
 	\end{minipage}\\
 	%% Draw dots across the bottom of the title
-	\hspace*{-.5\@pad}%
-	\begin{pgfpicture}
-		\color{uomgrey50}
-     		\pgfsetlinewidth{4pt}
-        	\pgfsetroundcap
-               	\pgfsetdash{{0pt}{10pt}}{0cm}
-		
-               	\pgfpathmoveto{\pgfpoint{-.5\@pad}{0mm}}
-               	\pgfpathlineto{\pgfpoint{\textwidth+.5\@pad}{0mm}}
-	
-               	\pgfusepath{stroke}
-	\end{pgfpicture}%
-	\vspace*{2\baselineskip}
+  \uomdots
+  \vspace*{\title@preskip}
 }
 
 %% Column environment
@@ -153,12 +177,18 @@
 \renewcommand{\scriptsize}{\fontsize{12pt}{1ex}\selectfont}
 \renewcommand{\footnotesize}{\fontsize{14pt}{1ex}\selectfont}
 \renewcommand{\small}{\fontsize{16pt}{1ex}\selectfont}
-\renewcommand{\normalsize}{\fontsize{18pt}{1em}\selectfont}
-\renewcommand{\large}{\fontsize{20pt}{1em}\selectfont}
-\renewcommand{\Large}{\fontsize{22pt}{1em}\selectfont}
-\renewcommand{\LARGE}{\fontsize{24pt}{1em}\selectfont}
-\renewcommand{\huge}{\fontsize{28pt}{1em}\selectfont}
-\renewcommand{\Huge}{\fontsize{48pt}{48pt}\selectfont}
+\renewcommand{\normalsize}{\fontsize{22pt}{24pt}\selectfont}
+\renewcommand{\large}{\fontsize{24pt}{26pt}\selectfont}
+\renewcommand{\Large}{\fontsize{28pt}{30pt}\selectfont}
+\renewcommand{\LARGE}{\fontsize{32pt}{34pt}\selectfont}
+\renewcommand{\huge}{\fontsize{36pt}{38pt}\selectfont}
+\renewcommand{\Huge}{\fontsize{48pt}{50pt}\selectfont}
+
+%% Modify section titles
+\RequirePackage{titlesec}
+\titlelabel{}  % No labels
+\titleformat*{\section}{\LARGE\color{uompurple}\bfseries}
 
 %% No indent, EVER
 \setlength{\parindent}{0mm}
+\setlength{\parskip}{1cm}
